@@ -1,0 +1,100 @@
+<html><head><link rel="stylesheet"             href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css" />
+<style>body {
+  padding: 20px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 10px 0;
+}
+
+p {
+  padding: 5px 0;
+}
+
+img {
+  display: block;
+  width: 300px;
+}
+</style></head>
+<body><h1>Minimal Markdown Parser in Python3</h1>
+<p>This is the first minimal project in 2018, which provides minimal parsing and rendering functions of Markdown. Specifically, it supports most common Markdown syntax, and could parse source file into Python <code>dict</code>, as well as render to html.</p>
+<p>Some extended functions of Markdown are not supported yet, but are under implementation.</p>
+<h2>Basic Syntax</h2>
+<p>You might find the <a href="https://en.wikipedia.org/wiki/Markdown" title="">introduction of Markdown</a> is helpful, as well as the <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf" title="">cheatsheet</a> by Github (It defines differently, but popular).</p>
+<h3>1. Header</h3>
+<p>Use hash symbol to indicate headers. For example:</p>
+<pre><code class="language-markdown"># Header1
+## Header2
+### Header3
+</code></pre>
+<p>Rendered HTML will be like:</p>
+<h1>Header1</h1>
+<h2>Header2</h2>
+<h3>Header3</h3>
+<h3>2. Code Block</h3>
+<p>Use ``` to start a code block, followed by the language. Use ``` to end the block as well. For example:</p>
+<pre><code class="language-python">def test(param):
+    print(param)
+</code></pre>
+<h3>3. List</h3>
+<h4>Unordered List:</h4>
+<p>Nested list is supported. Use tab or 4 spaces to indicate indentations.</p>
+<pre><code class="language-markdown">- item1
+- item2
+- item3
+    - subitem1
+    - subitem2
+        - subsubitem1
+        - subsubitem2
+- item4
+</code></pre>
+<p>Rendered as:</p>
+<ul>
+<li>item1</li>
+<li>item2</li>
+<li>item3<ul>
+<li>subitem1</li>
+<li>subitem2<ul>
+<li>subsubitem1</li>
+<li>subsubitem2</li>
+</ul></li>
+</ul></li>
+<li>item4</li>
+</ul>
+<h4>Ordered List:</h4>
+<pre><code class="language-markdown">1. item1
+2. item2
+3. item3
+    1. subitem1
+    2. subitem2
+4. item4
+</code></pre>
+<p>Rendered as:</p>
+<ol><li>item1</li>
+<li>item2</li>
+<li>item3<ol><li>subitem1</li>
+<li>subitem2</li>
+</ol></li>
+<li>item4</li>
+</ol>
+<h3>4. Link</h3>
+<pre><code class="language-markdown">[shown content](www.google.com "optional title")
+</code></pre>
+<p><a href="www.google.com" title="optional title">shown content</a></p>
+<h3>5. Image</h3>
+<pre><code class="language-markdown">![Image](https://scontent-nrt1-1.cdninstagram.com/t51.2885-15/s640x64…1080.1080/23823593_1751381835163782_208122965429059584_n.jpg)
+</code></pre>
+<p><img src="https://scontent-nrt1-1.cdninstagram.com/t51.2885-15/s640x64…1080.1080/23823593_1751381835163782_208122965429059584_n.jpg" title="Image" /></p>
+<h3>6. emphasis</h3>
+<pre><code class="language-markdown">**bold**
+*italic*
+</code></pre>
+<p>Rendered as:</p>
+<p><strong>bold</strong></p>
+<p><em>italic</em></p>
+
+<script src="            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/prism.min.js"></script>            <script src="            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-python.min.js"></script>            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-markdown.min.js"></script></body></html>

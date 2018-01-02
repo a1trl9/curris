@@ -1,0 +1,2 @@
+- Improve performance of HTML render, especially inject prism highlight.
+- block quote render

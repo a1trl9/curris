@@ -1,0 +1,6 @@
+.cache
+.coverage
+build
+curris.egg-info
+dist
+**/__pycache__

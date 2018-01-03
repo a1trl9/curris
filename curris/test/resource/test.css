@@ -22,6 +22,7 @@ img {
 table {
   display: block;
   width: 100%;
+  margin: 20px 0;
   overflow: auto;
   border-spacing: 0;
   border-collapse: collapse;
@@ -30,4 +31,12 @@ table {
 th, td {
   padding: 6px 13px;
   border: 1px solid #dfe2e5;
+}
+
+blockquote {
+  margin: 0;
+  padding: 8px 0;
+  padding-left: 12px;
+  border-left: 6px solid #ccc;
+  background: #f9f9f9;
 }

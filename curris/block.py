@@ -16,25 +16,49 @@ def parse_block(line, target, attrs):
         target.append({'block_type': 'blank'})
         return
 
+    result = _handle_code_block(line, length, target, attrs) or\
+            _handle_table(line, length, target, attrs)
+    if result:
+        return
+
+    _try_finalize_table(target, attrs)
+
+    result = _handle_header(line, length, target)
+    if result:
+        return
+
+    result = _check_block_quotes(line, length) or _check_unorder_list_item(line, length) or \
+            _check_order_list_item(line, length)
+    if result:
+        target.append(result)
+    else:
+        _handle_indent(line, length, target, attrs)
+
+
+def _handle_code_block(line, length, target, attrs):
+    result = _check_code_block(line, length)
+    if result:
+        attrs['code_block'] = not attrs['code_block']
+        target.append(result)
+        return True
+
+    if attrs['code_block']:
+        target.append({'block_type': 'code', 'content': line})
+        return True
+    return False
+
+
+def _handle_table(line, length, target, attrs):
     result = _check_table(line, length)
     if result:
         if not attrs['table_block']:
             attrs['table_block'] = True
         target.append(result)
-        return
+        return True
+    return False
 
-    result = _check_code_block(line, length)
-    if result:
-        attrs['code_block'] = not attrs['code_block']
-        target.append(result)
-        return
 
-    if attrs['code_block']:
-        target.append({'block_type': 'code', 'content': line})
-        return
-
-    _try_finalize_table(target, attrs)
-
+def _handle_header(line, length, target):
     result = _check_header(line, length)
     if result:
         if 'prev_block_type' in result and target:
@@ -43,14 +67,8 @@ def parse_block(line, target, attrs):
             target[-1]['block_type'] = result['prev_block_type']
         else:
             target.append(result)
-        return
-
-    result = _check_block_quotes(line, length) or _check_unorder_list_item(line, length) or \
-            _check_order_list_item(line, length)
-    if result:
-        target.append(result)
-        return
-    _handle_indent(line, length, target, attrs)
+        return True
+    return False
 
 
 def _try_finalize_table(target, attrs):
@@ -64,6 +82,7 @@ def _handle_indent(line, length, target, attrs):
     if result['indent'] == 0:
         del result['indent']
         if target and ('block_type' not in target[-1] or target[-1]['block_type'] == 'normal'):
+            target[-1]['content'].append({'span_type': 'text', 'content': '\n'})
             target[-1]['content'].append(result['content'])
         else:
             target.append(result)
@@ -138,12 +157,6 @@ def _check_indent(line, length):
     return {'indent': 0, 'content': [parse_span(line, [])], 'block_type': 'normal'}
 
 
-"""
-Table is different from list or code block, which we just remain the structure line by line.
-However, we need to wrap a table unit together afterwards.
-"""
-
-
 def _build_table(target):
     table = []
     while target and target[-1]['block_type'] == 'potential_table':
@@ -161,7 +174,7 @@ def _build_table(target):
         return
     info = is_seps['content']
     header = _check_table_content(table[0]['content'], table[0]['seps'],
-                                   info, True)
+                                  info, True)
     content = [_check_table_content(i['content'], i['seps'], info)\
             for i in table[2:]]
     table = {'block_type': 'table', 'content': {
@@ -172,7 +185,7 @@ def _build_table(target):
 
 
 def _build_table_as_normal(target, table):
-    content = [parse_span(i) for i in table]
+    content = [parse_span(i['content'], []) for i in table]
     if target and target[-1]['block_type'] == 'normal':
         for unit in content:
             target[-1]['content'].append(unit)
@@ -224,10 +237,12 @@ def _check_table_content(line, seps, info, is_header=False):
     if seps and seps[-1] + 1 < length:
         content.append(line[index:])
     for index, unit in enumerate(content):
-        content[index] = {'block_type': symbol, 'content': parse_span(unit, []), 'align': info[index]}
+        content[index] = {'block_type': symbol, 'content': parse_span(unit, []),
+                          'align': info[index]}
     c_length = len(content)
     while c_length < required:
-        content.append({'block_type': symbol, 'content': parse_span('', []), 'align': info[c_length]})
+        content.append({'block_type': symbol, 'content': parse_span('', []),
+                        'align': info[c_length]})
         c_length += 1
     return {'block_type': 'tr', 'content': content}
 

@@ -13,5 +13,3 @@ def test():
         output(json.dumps(result), 'curris/test/resource/output.json')
         html = build_html(result, 'curris/test/resource/test.css')
         output(html, 'curris/test/resource/output.html')
-
-test()

@@ -23,6 +23,7 @@ img {
 table {
   display: block;
   width: 100%;
+  margin: 20px 0;
   overflow: auto;
   border-spacing: 0;
   border-collapse: collapse;
@@ -32,11 +33,23 @@ th, td {
   padding: 6px 13px;
   border: 1px solid #dfe2e5;
 }
+
+blockquote {
+  margin: 0;
+  padding: 8px 0;
+  padding-left: 12px;
+  border-left: 6px solid #ccc;
+  background: #f9f9f9;
+}
 </style></head>
-<body><p>|Tables|Are|Cool|</p>
-<p>|:---|:---:|---:|</p>
-<p>|item1|item2|item3|</p>
-<p>|item4|item5|item6|</p>
-<p></p>
+<body><table><thead><tr><th align="left">Tables</th>
+<th align="center">Are</th>
+<th align="right">Cool</th></tr></thead><tbody><tr><td align="left">item1</td>
+<td align="center">item2</td>
+<td align="right"></td></tr>
+<tr><td align="left">item4</td>
+<td align="center">item5</td>
+<td align="right"><strong>item6</strong></td></tr></tbody></table><p>|Tables|Are|Cool||:---|:---:|--:||item1|item2|||item4|item5|<strong>item6</strong>|</p>
+<p>|Tables|Are|Cool|</p>
 
 <script src="            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/prism.min.js"></script>            <script src="            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-python.min.js"></script>            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-markdown.min.js"></script></body></html>

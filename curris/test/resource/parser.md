@@ -4,6 +4,15 @@ This is the first minimal project in 2018, which provides minimal parsing and re
 
 Some extended functions of Markdown are not supported yet, but are under implementation.
 
+## Usage
+```python
+from curris.parser import parse
+from curris.render.html import build_html
+
+parsed_result = parse(markdown_string)
+built_html = build_html(parsed_result, output_file_path)
+```
+
 ## Basic Syntax
 
 You might find the [introduction of Markdown](https://en.wikipedia.org/wiki/Markdown) is helpful, as well as the [cheatsheet](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf) by Github (It defines differently, but popular).
@@ -125,3 +134,7 @@ Rendered as:
 **bold**
 
 *italic*
+
+### 9. quoteblock
+
+> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.

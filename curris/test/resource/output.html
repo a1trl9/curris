@@ -23,6 +23,7 @@ img {
 table {
   display: block;
   width: 100%;
+  margin: 20px 0;
   overflow: auto;
   border-spacing: 0;
   border-collapse: collapse;
@@ -32,10 +33,24 @@ th, td {
   padding: 6px 13px;
   border: 1px solid #dfe2e5;
 }
+
+blockquote {
+  margin: 0;
+  padding: 8px 0;
+  padding-left: 12px;
+  border-left: 6px solid #ccc;
+  background: #f9f9f9;
+}
 </style></head>
 <body><h1>Minimal Markdown Parser in Python3</h1>
 <p>This is the first minimal project in 2018, which provides minimal parsing and rendering functions of Markdown. Specifically, it supports most common Markdown syntax, and could parse source file into Python <code>dict</code>, as well as render to html.</p>
 <p>Some extended functions of Markdown are not supported yet, but are under implementation.</p>
+<h2>Usage</h2>
+<pre><code class="language-python">from curris.parser import parse
+from curris.render.html import build_html
+parsed_result = parse(markdown_string)
+built_html = build_html(parsed_result, output_file_path)
+</code></pre>
 <h2>Basic Syntax</h2>
 <p>You might find the <a href="https://en.wikipedia.org/wiki/Markdown" title="">introduction of Markdown</a> is helpful, as well as the <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf" title="">cheatsheet</a> by Github (It defines differently, but popular).</p>
 <h3>1. Header</h3>
@@ -95,12 +110,11 @@ th, td {
 <li>item4</li>
 </ol>
 <h3>5. Table</h3>
-<pre><code class="language-markdown"><p>|Tables|Are|Cool|</p>
-<p>|:---|:---:|---:|</p>
-<p>|item1|item2|item3|</p>
-<p>|item4|item5|item6|</p>
+<pre><code class="language-markdown">|Tables|Are|Cool|
+|:---|:---:|---:|
+|item1|item2|item3|
+|item4|item5|item6|
 </code></pre>
-<p></p>
 <p>Rendered as:</p>
 <table><thead><tr><th align="left">Tables</th>
 <th align="center">Are</th>
@@ -124,5 +138,6 @@ th, td {
 <p>Rendered as:</p>
 <p><strong>bold</strong></p>
 <p><em>italic</em></p>
-
+<h3>9. quoteblock</h3>
+<blockquote>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</blockquote>
 <script src="            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/prism.min.js"></script>            <script src="            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-python.min.js"></script>            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-markdown.min.js"></script></body></html>

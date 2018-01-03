@@ -13,4 +13,4 @@ parsed_result = parse(markdown_string)
 built_html = build_html(parsed_result, output_file_path)
 ```
 
-[More Introduction](www.a1trl936.me/curris)
+[More Introduction](http://www.a1trl936.me/curris)

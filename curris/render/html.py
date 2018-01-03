@@ -56,8 +56,7 @@ def _render_block(target, attrs):
         prefix = '</ul>\n' if attrs['in_list'] == 'unorder_list_item' else '</ol>\n'
         attrs['in_list'] = ''
     if block_type == 'block_quotes':
-        attrs = {'in_list': '', 'in_code': False}
-        return '<blockquote>{}</blockquote>'.format(_render_block(content, attrs))
+        return '<blockquote>{}</blockquote>'.format(_render_to_html(content, attrs))
     if block_type[0] == 'h':
         return '{}<{}>{}</{}>\n'.format(prefix, block_type, _render_span(content), block_type)
     if block_type == 'code':

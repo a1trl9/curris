@@ -87,7 +87,7 @@ def _handle_indent(line, length, target, attrs):
         else:
             target.append(result)
     elif target and 'block_type' in target[-1] and target[-1]['block_type'] in\
-            ['order_list_item', 'unorder_list_item']:
+            ['order_list_item', 'unorder_list_item', 'block_quotes']:
         parse_block(result['content'][0], target[-1]['content'], {'code_block': False,
                                                                   'table_block': False})
     else:

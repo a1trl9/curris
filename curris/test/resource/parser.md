@@ -44,6 +44,8 @@ def test(param):
     print(param)
 ```
 
+[Prism](http://prismjs.com) is used to highlight codes in HTML.
+
 ### 3. List
 
 #### Unordered List:
@@ -112,7 +114,7 @@ Rendered as:
 [shown content](www.google.com "optional title")
 ```
 
-[shown content](www.google.com "optional title")
+[shown content](https://www.google.com "optional title")
 
 
 ### 7. Image

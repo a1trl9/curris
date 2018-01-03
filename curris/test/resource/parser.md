@@ -1,4 +1,5 @@
 # Minimal Markdown Parser in Python3
+
 This is the first minimal project in 2018, which provides minimal parsing and rendering functions of Markdown. Specifically, it supports most common Markdown syntax, and could parse source file into Python `dict`, as well as render to html.
 
 Some extended functions of Markdown are not supported yet, but are under implementation.
@@ -20,7 +21,9 @@ Use hash symbol to indicate headers. For example:
 Rendered HTML will be like:
 
 # Header1
+
 ## Header2
+
 ### Header3
 
 ### 2. Code Block
@@ -33,8 +36,11 @@ def test(param):
 ```
 
 ### 3. List
+
 #### Unordered List:
+
 Nested list is supported. Use tab or 4 spaces to indicate indentations.
+
 ```markdown
 - item1
 - item2
@@ -75,7 +81,23 @@ Rendered as:
     2. subitem2
 4. item4
 
-### 4. Link
+### 5. Table
+
+```markdown
+|Tables|Are|Cool|
+|:---|:---:|---:|
+|item1|item2|item3|
+|item4|item5|item6|
+```
+
+Rendered as:
+
+|Tables|Are|Cool|
+|:---|:---:|---:|
+|item1|item2|item3|
+|item4|item5|item6|
+
+### 6. Link
 
 ```markdown
 [shown content](www.google.com "optional title")
@@ -84,7 +106,7 @@ Rendered as:
 [shown content](www.google.com "optional title")
 
 
-### 5. Image
+### 7. Image
 
 ```markdown
 ![Image](https://scontent-nrt1-1.cdninstagram.com/t51.2885-15/s640x64…1080.1080/23823593_1751381835163782_208122965429059584_n.jpg)
@@ -92,7 +114,7 @@ Rendered as:
 
 ![Image](https://scontent-nrt1-1.cdninstagram.com/t51.2885-15/s640x64…1080.1080/23823593_1751381835163782_208122965429059584_n.jpg)
 
-### 6. emphasis
+### 8. emphasis
 ```markdown
 **bold**
 *italic*
@@ -101,4 +123,5 @@ Rendered as:
 Rendered as:
 
 **bold**
+
 *italic*

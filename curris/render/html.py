@@ -44,6 +44,8 @@ def _render_block(target, attrs):
     if 'block_type' not in target:
         return _render_span(target)
     block_type = target['block_type']
+    if block_type == 'blank':
+        return ''
     if block_type == 'code_block':
         return _render_code_block(target, attrs)
     block_type, content = target['block_type'], target['content']
@@ -57,6 +59,8 @@ def _render_block(target, attrs):
         return '{}<{}>{}</{}>\n'.format(prefix, block_type, _render_span(content), block_type)
     if block_type == 'code':
         return content + '\n'
+    if block_type == 'table':
+        return _render_table(content)
     return '<p>{}{}</p>\n'.format(prefix, _render_span(content))
 
 
@@ -108,3 +112,23 @@ def _inner_render_span(target):
                                                        _render_span(title),
                                                        _render_span(inner))
     return _render_span(target['content'])
+
+
+def _render_table(target):
+    header = _render_table_row(target['header'])
+    body = _render_table_rows(target['body'])
+    return '<table><thead>{}</thead><tbody>{}</tbody></table>'.format(header, body)
+
+
+def _render_table_rows(rows):
+    return '\n'.join([_render_table_row(i) for i in rows])
+
+
+def _render_table_row(row):
+    return '<tr>{}</tr>'.format('\n'.join([_render_table_unit(i) for i in row['content']]))
+
+
+def _render_table_unit(target):
+    block_type, content = target['block_type'], target['content']
+    align = ['left', 'center', 'right'][target['align']]
+    return '<{} align="{}">{}</{}>'.format(block_type, align, _render_span(content), block_type)

@@ -60,6 +60,7 @@ def _check_link(source, target, length, start):
         index = _split_link(source, target, length, index, (brackets, is_img))
     return index
 
+
 def _split_link_definition(source, target, length, start, brackets):
     index = start
     comp = re.compile('[ \t]+')
@@ -93,6 +94,7 @@ def _split_link_definition(source, target, length, start, brackets):
                    'title': parse_span(title, []), 'content': content,
                    'id': ''.join(brackets)})
     return index
+
 
 def _split_link(source, target, length, start, prev_info):
     index = start
@@ -159,6 +161,7 @@ def _check_emphasis(source, target, length, start):
     else:
         index += 2
     return index
+
 
 def _check_code(source, target, length, start):
     index = start

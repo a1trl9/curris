@@ -19,6 +19,19 @@ img {
   display: block;
   width: 300px;
 }
+
+table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
 </style></head>
 <body><h1>Minimal Markdown Parser in Python3</h1>
 <p>This is the first minimal project in 2018, which provides minimal parsing and rendering functions of Markdown. Specifically, it supports most common Markdown syntax, and could parse source file into Python <code>dict</code>, as well as render to html.</p>
@@ -81,15 +94,30 @@ img {
 </ol></li>
 <li>item4</li>
 </ol>
-<h3>4. Link</h3>
+<h3>5. Table</h3>
+<pre><code class="language-markdown"><p>|Tables|Are|Cool|</p>
+<p>|:---|:---:|---:|</p>
+<p>|item1|item2|item3|</p>
+<p>|item4|item5|item6|</p>
+</code></pre>
+<p></p>
+<p>Rendered as:</p>
+<table><thead><tr><th align="left">Tables</th>
+<th align="center">Are</th>
+<th align="right">Cool</th></tr></thead><tbody><tr><td align="left">item1</td>
+<td align="center">item2</td>
+<td align="right">item3</td></tr>
+<tr><td align="left">item4</td>
+<td align="center">item5</td>
+<td align="right">item6</td></tr></tbody></table><h3>6. Link</h3>
 <pre><code class="language-markdown">[shown content](www.google.com "optional title")
 </code></pre>
 <p><a href="www.google.com" title="optional title">shown content</a></p>
-<h3>5. Image</h3>
+<h3>7. Image</h3>
 <pre><code class="language-markdown">![Image](https://scontent-nrt1-1.cdninstagram.com/t51.2885-15/s640x64…1080.1080/23823593_1751381835163782_208122965429059584_n.jpg)
 </code></pre>
 <p><img src="https://scontent-nrt1-1.cdninstagram.com/t51.2885-15/s640x64…1080.1080/23823593_1751381835163782_208122965429059584_n.jpg" title="Image" /></p>
-<h3>6. emphasis</h3>
+<h3>8. emphasis</h3>
 <pre><code class="language-markdown">**bold**
 *italic*
 </code></pre>

@@ -24,8 +24,10 @@ def _suf_process(target):
 def parse(source):
     """ parse entry
     """
+    source = source.split('\n')
     target = []
-    attrs = {'code_block': False}
+    attrs = {'code_block': False, 'table_block': False}
+    source.append(-1)
     for line in source:
         parse_block(line, target, attrs)
     _suf_process(target)

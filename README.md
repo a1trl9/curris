@@ -5,12 +5,18 @@ This is the first minimal project in 2018, which provides minimal parsing and re
 Some extended functions of Markdown are not supported yet, but are under implementation.
 
 ## Usage
+### Python
 ```python
 from curris.parser import parse
 from curris.render.html import build_html
 
 parsed_result = parse(markdown_string)
-built_html = build_html(parsed_result, output_file_path)
+built_html = build_html(parsed_result, optional_css_resource)
+```
+
+### Cli
+```
+curris -s=source_path -o=output_path [-html]
 ```
 
 [More Introduction](http://www.a1trl936.me/curris)

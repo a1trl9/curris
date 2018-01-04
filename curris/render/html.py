@@ -7,14 +7,14 @@ def build_html(target, css_source=None):
     style = _add_style(css_source) if css_source else ''
     output = _render_to_html(target)
     code_script = '<script src="\
-            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/prism.min.js"></script>\
-            <script src="\
-            https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-python.min.js"></script>\
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism\
+https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/prism.min.js"></script>\
+\n<script src="\
+https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-python.min.js"></script>\
+\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism\
 /1.9.0/components/prism-markdown.min.js"></script>'
     code_style = '<link rel="stylesheet" \
-            href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css" />'
-    return '<html><head>{}\n{}</head>\n<body>{}\n{}</body></html>'\
+href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css" />'
+    return '<html>\n<head>\n{}\n{}</head>\n<body>\n{}\n{}\n</body>\n</html>'\
             .format(code_style, style, output, code_script)
 
 

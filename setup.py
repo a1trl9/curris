@@ -47,5 +47,9 @@ setup(
     ],
     extras_require={
         'testing': ['pytest']
-        }
+        },
+    entry_points='''
+        [console_scripts]
+        curris=curris.cli:main
+    '''
     )

@@ -1,10 +1,10 @@
 """render to html module
 """
 
-def build_html(target, css_source):
+def build_html(target, css_source=None):
     """ render to html
     """
-    style = _add_style(css_source)
+    style = _add_style(css_source) if css_source else ''
     output = _render_to_html(target)
     code_script = '<script src="\
             https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/prism.min.js"></script>\

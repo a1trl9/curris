@@ -1,11 +1,11 @@
-""" setup
+""" setup for curris
 """
 
 import sys
 from setuptools import setup
 from setuptools.command.test import test as Test
 
-import curris
+from curris import __VERSION__
 
 class PyTest(Test):
     """ pytest class
@@ -22,12 +22,13 @@ class PyTest(Test):
 
 setup(
     name='curris',
-    version=curris.__version__,
+    version=__VERSION__,
     url='https://github.com/a1trl9/curris',
     license='MIT License',
     author='a1trl9',
     tests_require=['pytest'],
     install_requires=[],
+    packages=['curris', 'curris.render'],
     cmdclass={'test': PyTest},
     author_email='adavindes@gmail.com',
     description='Minimal Markdown Parser in Python3',

@@ -5,7 +5,7 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as Test
 
-from curris import __VERSION__
+from curris import __version__
 
 class PyTest(Test):
     """ pytest class
@@ -22,7 +22,7 @@ class PyTest(Test):
 
 setup(
     name='curris',
-    version=__VERSION__,
+    version=__version__,
     url='https://github.com/a1trl9/curris',
     license='MIT License',
     author='a1trl9',

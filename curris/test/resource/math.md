@@ -1,0 +1,3 @@
+Given $$\sum_{i=0}^ni^2=\alpha$$.
+
+See $i + 1 = n$ is...

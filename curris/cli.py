@@ -11,6 +11,7 @@ from curris.render.render_to_file import render_to_file
 def _build_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-html', action='store_true', help='render to html')
+    parser.add_argument('-css', help='add css source file')
     parser.add_argument('-o', help='output file path')
     parser.add_argument('-s', help='source file path')
     return parser
@@ -32,7 +33,8 @@ def main():
 
     if args.html:
         file_type = 'html'
-        rendered = build_html(parsed)
+        css_source = args.css if args.css else None
+        rendered = build_html(parsed, css_source)
     else:
         file_type = 'json'
         rendered = json.dumps(parsed)

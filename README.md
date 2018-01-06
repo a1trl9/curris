@@ -16,7 +16,7 @@ built_html = build_html(parsed_result, optional_css_resource)
 
 ### Cli
 ```
-curris -s=source_path -o=output_path [-html]
+curris -s=source_path -o=output_path [-html] [-css=css_source_path]
 ```
 
 [More Introduction](http://www.a1trl936.me/curris)

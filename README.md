@@ -4,6 +4,11 @@ This is the first minimal project in 2018, which provides minimal parsing and re
 
 Some extended functions of Markdown are not supported yet, but are under implementation.
 
+## Installation
+```
+python setup.py install
+```
+
 ## Usage
 ### Python
 ```python
@@ -16,7 +21,5 @@ built_html = build_html(parsed_result, optional_css_resource)
 
 ### Cli
 ```
-curris -s=source_path -o=output_path [-html] [-css=css_source_path]
+curris -s=source_path -o=output_path [-html] [-css=css_source_path] [-style=style_string]
 ```
-
-[More Introduction](http://www.a1trl936.me/curris)

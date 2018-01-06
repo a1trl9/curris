@@ -1,33 +1,40 @@
 """render to html module
 """
 
-def build_html(target, css_source=None):
+def build_html(target, css_source=None, css_string=''):
     """ render to html
     """
-    style = _add_style(css_source) if css_source else ''
+    style = _add_style(css_source, css_string) if css_source or css_string else ''
     attrs = {'in_list': '', 'in_code': False, 'code_langs': [], 'has_math': False}
     output = _render_to_html(target, attrs)
 
     code_script = _build_code_script(attrs['code_langs']) if attrs['code_langs'] else ''
     code_style = '<link rel="stylesheet" \
-href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css" />' if attrs['code_langs'] else ''
+href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css"\
+/>' if attrs['code_langs'] else ''
 
-    math_style = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css"\
-integrity="sha384-exe4Ak6B0EoJI0ogGxjJ8rn+RN3ftPnEQrGwX59KTCl5ybGzvHGKjhPKk/KC3abb" crossorigin="anonymous">' if attrs['has_math'] else ''
+    math_style = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com\
+/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css"\
+integrity="sha384-exe4Ak6B0EoJI0ogGxjJ8rn+RN3ftPnEQrGwX59KTCl5ybGzvHGKjhPKk/KC3abb"\
+crossorigin="anonymous">' if attrs['has_math'] else ''
     math_script = _build_math_script() if attrs['has_math'] else ''
 
-    return '<!DOCTYPE html>\n<html>\n<head>\n{}\n{}\n{}\n</head>\n<body>\n{}\n{}\n{}\n</body>\n</html>'\
+    return '<!DOCTYPE html>\n<html>\n<head>\n{}\n{}\n{}\n</head>\n<body>\
+\n{}\n{}\n{}\n</body>\n</html>'\
             .format(code_style, math_style, style, output, code_script, math_script)
 
 
 def _build_math_script():
     """ Thx Katex for rendering Latex
     """
-    math_prefix = '<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.js" \
+    math_prefix = '<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX\
+/0.9.0-alpha2/katex.min.js" \
 integrity="sha384-OMvkZ24ANLwviZR2lVq8ujbE/bUO8IR1FdBrKLQBI14Gq5Xp/lksIccGkmKL8m+h" crossorigin="anonymous"></script>\
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/contrib/auto-render.min.js" \
-integrity="sha384-cXpztMJlr2xFXyDSIfRWYSMVCXZ9HeGXvzyKTYrn03rsMAlOtIQVzjty5ULbaP8L" crossorigin="anonymous"></script>'
-    render_script = '<script>renderMathInElement(document.body,{delimiters:[{left: "$$", right: "$$", display: true}, \
+integrity="sha384-cXpztMJlr2xFXyDSIfRWYSMVCXZ9HeGXvzyKTYrn03rsMAlOtIQVzjty5ULbaP8L"\
+crossorigin="anonymous"></script>'
+    render_script = '<script>renderMathInElement(document.body,\
+{delimiters:[{left: "$$", right: "$$", display: true}, \
 {left: "$", right: "$", display: false}]})</script>'
     return math_prefix + '\n' + render_script
 
@@ -59,10 +66,16 @@ def _render_to_html(target, attrs):
     return _render_block(target, attrs)
 
 
-def _add_style(source):
-    style = '<style>{}</style>'
-    with open(source) as source_file:
-        style = style.format(source_file.read())
+def _add_style(source, string):
+    if string and string[0] in '\'"':
+        string = string[1:]
+    if string and string[-1] in '\'"':
+        string = string[:-1]
+    if source:
+        with open(source) as source_file:
+            style = '<style>{}\n{}</style>'.format(source_file.read(), string)
+    else:
+        style = '<style>{}</style>'.format(string)
     return style
 
 
@@ -95,7 +108,8 @@ def _render_block(target, attrs):
         _merge_attrs(attrs, new_attrs)
         return rendered
     if block_type[0] == 'h':
-        return '{}<{}>{}</{}>\n'.format(prefix, block_type, _render_span(content, attrs), block_type)
+        return '{}<{}>{}</{}>\n'.format(prefix, block_type,
+                                        _render_span(content, attrs), block_type)
     if block_type == 'code':
         return content + '\n'
     if block_type == 'table':
@@ -130,7 +144,7 @@ def _render_list_item(block_type, content, attrs):
     return rendered
 
 
-def _render_span(target,attrs):
+def _render_span(target, attrs):
     if isinstance(target, list):
         output = []
         for unit in target:

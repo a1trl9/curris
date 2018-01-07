@@ -5,6 +5,7 @@ import re
 
 def parse_span(source, target):
     """ parse span
+    TODO: simplify codes
     """
     index, length = 0, len(source)
     while index < length:
@@ -13,6 +14,10 @@ def parse_span(source, target):
             index = new_index
             continue
         new_index = _check_emphasis(source, target, length, index)
+        if new_index > index:
+            index = new_index
+            continue
+        new_index = _check_strike_or_script(source, target, length, index)
         if new_index > index:
             index = new_index
             continue
@@ -165,6 +170,52 @@ def _check_emphasis(source, target, length, start):
     else:
         index += 2
     return index
+
+
+def _check_strike_or_script(source, target, length, start):
+    new_index = _check_strike_out(source, target, length, start)
+    if new_index > start:
+        return new_index
+    new_index = _check_script(source, target, length, start)
+    if new_index > start:
+        return new_index
+    return start
+
+
+def _check_strike_out(source, target, length, start):
+    if source[:2] != '~~':
+        return start
+    index = start + 2
+    content = []
+    while index + 1 < length and source[index:index + 2] != '~~': 
+        if source[index] == '\\':
+            index += 2
+            continue
+        content.append(source[index])
+        index += 1
+    if index + 1 >= length:
+        return start
+    target.append({'span_type': 'strike_out', 'content': parse_span(''.join(content), [])})
+    return index + 2
+
+
+def _check_script(source, target, length, start):
+    if source[start] not in '~^':
+        return start
+    symbol = source[start]
+    index, content = start, []
+    script_type = 'super_script' if source[start] == '^' else 'sub_script'
+    index += 1
+    while index < length and source[index] != symbol:
+        if source[index] == '\\':
+            index += 2
+            continue
+        content.append(source[index])
+        index += 1
+    if index >= length:
+        return start
+    target.append({'span_type': script_type, 'content': parse_span(''.join(content), [])})
+    return index + 1
 
 
 def _check_code(source, target, length, start):

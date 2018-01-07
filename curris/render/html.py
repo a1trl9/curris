@@ -157,9 +157,10 @@ def _inner_render_span(target, attrs):
     if isinstance(target, str):
         return target
     span_type = target['span_type']
-    if span_type in ['bold', 'italic', 'inline_code']:
-        symbol = 'strong' if span_type == 'bold' else 'em' if span_type == 'italic'\
-                else 'code'
+    cands = {'bold': 'strong', 'italic': 'em', 'inline_code': 'code',
+             'super_script': 'sup', 'sub_script': 'sub', 'strike_out': 'del'}
+    if span_type in cands:
+        symbol = cands[span_type]
         return '<{}>{}</{}>'.format(symbol, _render_span(target['content'], attrs), symbol)
     if span_type in ['math_block', 'math_inline']:
         if not attrs['has_math']:

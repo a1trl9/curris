@@ -3,6 +3,8 @@
 
 import re
 
+from curris import helper
+
 def parse_span(source, target):
     """ parse span
     TODO: simplify codes
@@ -43,6 +45,8 @@ def parse_span(source, target):
 
 def _check_link(source, target, length, start):
     """ check inline link, link reference or link definition
+    link :: <!>?<lb><whitespace>*<link_name>whitespace*<rb>[link_definition|link_url]
+    link_name :: span_element
     """
     index, is_img = start, False
     if source[index] == '!':
@@ -50,33 +54,36 @@ def _check_link(source, target, length, start):
         index += 1
     if index >= length or source[index] != '[':
         return start
-    brackets = []
     index += 1
+    b_start = index
     while index < length and source[index] != ']':
         if source[index] == '\\':
             index += 2
             continue
-        brackets.append(source[index])
         index += 1
+    brackets = helper.elimate_whitespace_around(source[b_start:index])
     index += 1
-    if source[index:index + 2] == ' [':
-        index += 1
-    elif index >= length or source[index] not in ':[(':
+    jumps = helper.elimate_leading_whitespace(source[index:], '[')
+    index += jumps
+    if index >= length or source[index] not in ':[(':
         return start
     if source[index] == ':':
-        index = _split_link_definition(source, target, length, index + 1, brackets)
+        new_index = _split_link_definition(source, target, length, index + 1, brackets)
     else:
-        index = _split_link(source, target, length, index, (brackets, is_img))
-    return index
+        new_index = _split_link(source, target, length, index, (brackets, is_img))
+    return new_index if new_index > index else start
 
 
 def _split_link_definition(source, target, length, start, brackets):
+    """
+    link_definition :: <colon><whitespace>+<text_element><link_title>*
+    link_title :: <whitespace>*['|<lp>|"]<text_element>['|<rp>|"]
+    """
     index = start
-    comp = re.compile('[ \t]+')
-    splits = comp.split(source[index:], 2)
-    if splits[0] != '':
-        return index
-    splits = splits[1:]
+    index += helper.elimate_leading_whitespace(source[index:])
+    if index >= length:
+        return start
+    splits = helper.split_first_whitespace(source[index:])
     content = splits[0]
     title = ''
     if len(splits) > 1:
@@ -100,27 +107,32 @@ def _split_link_definition(source, target, length, start, brackets):
     else:
         index = length
     target.append({'span_type': 'link_definition',
-                   'title': parse_span(title, []), 'content': content,
-                   'id': ''.join(brackets)})
+                   'title': title, 'content': content,
+                   'id': brackets})
     return index
 
 
 def _split_link(source, target, length, start, prev_info):
+    """
+    link_url :: [regular_link_url|reference_link_url]
+    regular_link_url :: <lp><whitespace>*<url_and_title><whitespace>*<rp>
+    reference_link_url :: <whitespace>*<lb><whitespace>*<url_and_title><whitespace>*<rb>
+    url_and_title :: <text_element><whitespace>+<text_element>*
+    """
     index = start
-    brackets, is_img = prev_info
-    next_part = []
+    inner, is_img = prev_info
     link_type = 'inline' if source[index] == '(' else 'refer'
     end = ')' if link_type == 'inline' else ']'
     index += 1
+    next_start = index
     while index < length and source[index] != end:
         if source[index] == '\\':
             index += 2
             continue
-        next_part.append(source[index])
         index += 1
     if index >= length:
         return start
-    inner, content = ''.join(brackets), ''.join(next_part)
+    content = helper.elimate_whitespace_around(source[next_start:index])
     if link_type == 'inline':
         _check_inline_link(target, content, inner, is_img)
     else:
@@ -132,8 +144,7 @@ def _split_link(source, target, length, start, prev_info):
 
 def _check_inline_link(target, content, inner, is_img):
     title = ''
-    comp = re.compile('[ \t]+')
-    splits = comp.split(content, 1)
+    splits = helper.split_first_whitespace(content)
     if len(splits) > 1:
         title = splits[1]
         if len(title) > 1 and title[0] + title[-1] in ['""', '\'\'']:
@@ -187,7 +198,7 @@ def _check_strike_out(source, target, length, start):
         return start
     index = start + 2
     content = []
-    while index + 1 < length and source[index:index + 2] != '~~': 
+    while index + 1 < length and source[index:index + 2] != '~~':
         if source[index] == '\\':
             index += 2
             continue

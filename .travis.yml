@@ -2,10 +2,10 @@ language: python
 python:
     - "3.6.3"
 install:
-    - "pip install -r requirements.txt --use-mirrors"
-    - "pip install coverage"
-    - "pip install coveralls"
+    - pip install -r requirements.txt --use-mirrors
+    - pip install tox-travis
+    - pip install coveralls
 script:
-    - "coverage run --source=curris  setup.py test"
+    - tox
 after_success:
     coveralls

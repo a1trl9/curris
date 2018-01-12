@@ -1,8 +1,6 @@
 """ Span Parser
 """
 
-import re
-
 from curris import helper
 
 def parse_span(source, target):
@@ -143,6 +141,8 @@ def _split_link(source, target, length, start, prev_info):
 
 
 def _check_inline_link(target, content, inner, is_img):
+    """ inline_link :: <text_element><whitespace>*<text_element>
+    """
     title = ''
     splits = helper.split_first_whitespace(content)
     if len(splits) > 1:
@@ -235,6 +235,8 @@ def _check_script(source, target, length, start):
 
 
 def _check_code(source, target, length, start):
+    """ inline_code :: <`><text_element><`>
+    """
     index = start
     if source[index] != '`':
         return index

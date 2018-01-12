@@ -1,5 +1,7 @@
 .cache
 .coverage
+.tox
+.eggs
 build
 curris.egg-info
 dist

@@ -156,6 +156,10 @@ def _check_inline_link(target, content, inner, is_img):
 
 
 def _check_emphasis(source, target, length, start):
+    """ emphasis :: [bold_emphasis|italic_emphasis]
+    bold_emphasis :: [*|_][2]<whitespace>*<span_element><whitespace>*[*|_][2]
+    italic_emphasis :: [*|_]<whitespace>*<span_element><whitespace>*[*|_]
+    """
     if source[start] not in '_*':
         return start
     symbol = source[start]
@@ -164,18 +168,19 @@ def _check_emphasis(source, target, length, start):
         index += 1
         emp_type = 'bold'
     index += 1
+    content_start = index
     while index < length and source[index] != symbol:
         if source[index] == '\\':
             index += 2
             continue
-        content.append(source[index])
         index += 1
     if index >= length:
         return start
+    content = helper.elimate_whitespace_around(source[content_start:index])
     if emp_type == 'bold' and (index + 1 >= length or source[index + 1] != symbol):
         target.append({'span_type': 'text', 'content': [symbol]})
         emp_type = 'italic'
-    target.append({'span_type': emp_type, 'content': parse_span(''.join(content), [])})
+    target.append({'span_type': emp_type, 'content': parse_span(content, [])})
     if emp_type == 'italic':
         index += 1
     else:

@@ -1,6 +1,7 @@
 """ Block Parser
 """
 
+from curris import helper
 from curris.span import parse_span
 
 def parse_block(line, target, attrs):
@@ -8,24 +9,24 @@ def parse_block(line, target, attrs):
     """
     if line == -1:
         _try_finalize_table(target, attrs)
-        return
+        return target
 
     length = len(line)
     if length == 0:
         _try_finalize_table(target, attrs)
         target.append({'block_type': 'blank'})
-        return
+        return target
 
     result = _handle_code_block(line, length, target, attrs) or\
             _handle_table(line, length, target, attrs)
     if result:
-        return
+        return target
 
     _try_finalize_table(target, attrs)
 
     result = _handle_header(line, length, target)
     if result:
-        return
+        return target
 
     result = _check_block_quotes(line, length) or _check_unorder_list_item(line, length) or \
             _check_order_list_item(line, length)
@@ -33,6 +34,7 @@ def parse_block(line, target, attrs):
         target.append(result)
     else:
         _handle_indent(line, length, target, attrs)
+    return target
 
 
 def _handle_code_block(line, length, target, attrs):
@@ -81,7 +83,8 @@ def _handle_indent(line, length, target, attrs):
     result = _check_indent(line, length)
     if result['indent'] == 0:
         del result['indent']
-        if target and ('block_type' not in target[-1] or target[-1]['block_type'] == 'normal'):
+        if target and ('block_type' not in target[-1] or \
+                target[-1]['block_type'] in ['normal', 'block_quotes']):
             target[-1]['content'].append({'span_type': 'text', 'content': '\n'})
             target[-1]['content'].append(result['content'])
         else:
@@ -96,33 +99,38 @@ def _handle_indent(line, length, target, attrs):
 
 def _check_header(line, length):
     """check if headers
+    first_header_line :: <=>+
+    second_header_line :: <->+
+    normal_header :: <#>+<span_element>
     """
     if length * '=' == line:
         return {'prev_block_type': 'h1'}
     if length * '-' == line:
         return {'prev_block_type': 'h2'}
     if length > 0 and line[0] == '#':
-        level, index = 1, 1
+        index = 1
         while index < length and line[index] == '#':
             index += 1
-            level += 1
-        level = min(6, level)
+        level = min(6, index)
         # Ignore any ending '#'
         end_index = length - 1
         while end_index >= 0 and line[end_index] == '#':
             end_index -= 1
+        index += helper.elimate_leading_whitespace(line[index:])
         return {'block_type': 'h{}'.format(level),
-                'content': [parse_span(line[index:end_index + 1].lstrip(), [])]}
+                'content': [parse_span(line[index:end_index + 1], [])]}
 
 
 def _check_block_quotes(line, length):
-    """check if blockquotes
+    """ check if blockquotes
+    block_quotes :: <rab>+<block_element>
     """
     if length > 0 and line[0] == '>':
         index = 1
-        if length > 1 and line[index] == ' ':
-            index += 1
-        return {'block_type': 'block_quotes', 'content': [parse_span(line[index:], [])]}
+        index += helper.elimate_leading_whitespace(line[index:])
+        new_attrs = {'code_block': False, 'table_block': False}
+        return {'block_type': 'block_quotes', 'content': parse_block(line[index:], [], new_attrs)}
+
 
 def _check_unorder_list_item(line, length):
     """check if unorder lists

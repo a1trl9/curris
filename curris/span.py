@@ -199,38 +199,44 @@ def _check_strike_or_script(source, target, length, start):
 
 
 def _check_strike_out(source, target, length, start):
+    """ strike_out :: <~>[2]<span_element><~>[2]
+    """
     if source[:2] != '~~':
         return start
     index = start + 2
-    content = []
+    content_start = index
     while index + 1 < length and source[index:index + 2] != '~~':
         if source[index] == '\\':
             index += 2
             continue
-        content.append(source[index])
         index += 1
     if index + 1 >= length:
         return start
-    target.append({'span_type': 'strike_out', 'content': parse_span(''.join(content), [])})
+    content = helper.elimate_whitespace_around(source[content_start:index])
+    target.append({'span_type': 'strike_out', 'content': parse_span(content, [])})
     return index + 2
 
 
 def _check_script(source, target, length, start):
+    """
+    script :: [~|^]<whitespace>*<span_element><whitespace>*[~|^]
+    """
     if source[start] not in '~^':
         return start
     symbol = source[start]
     index, content = start, []
     script_type = 'super_script' if source[start] == '^' else 'sub_script'
     index += 1
+    content_start = index
     while index < length and source[index] != symbol:
         if source[index] == '\\':
             index += 2
             continue
-        content.append(source[index])
         index += 1
     if index >= length:
         return start
-    target.append({'span_type': script_type, 'content': parse_span(''.join(content), [])})
+    content = helper.elimate_whitespace_around(source[content_start:index])
+    target.append({'span_type': script_type, 'content': parse_span(content, [])})
     return index + 1
 
 

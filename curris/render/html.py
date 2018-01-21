@@ -1,6 +1,8 @@
 """render to html module
 """
 
+from curris.filter import html_encode, process_link
+
 def build_html(target, css_source=None, css_string=''):
     """ render to html
     """
@@ -155,7 +157,7 @@ def _render_span(target, attrs):
 
 def _inner_render_span(target, attrs):
     if isinstance(target, str):
-        return target
+        return html_encode(target)
     span_type = target['span_type']
     cands = {'bold': 'strong', 'italic': 'em', 'inline_code': 'code',
              'super_script': 'sup', 'sub_script': 'sub', 'strike_out': 'del'}
@@ -168,7 +170,7 @@ def _inner_render_span(target, attrs):
         symbol = '$$' if span_type == 'math_block' else '$'
         return symbol + _render_span(target['content'], attrs) + symbol
     if span_type == 'inline_link':
-        content, title, inner, is_img = target['content'], target['title'],\
+        content, title, inner, is_img = process_link(target['content']), target['title'],\
                 target['inner'], target['is_img']
         if is_img:
             return '<img src="{}" title="{}" />'.format(_render_span(content, attrs),

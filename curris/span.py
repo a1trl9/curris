@@ -53,13 +53,8 @@ def _check_link(source, target, length, start):
     if index >= length or source[index] != '[':
         return start
     index += 1
-    b_start = index
-    while index < length and source[index] != ']':
-        if source[index] == '\\':
-            index += 2
-            continue
-        index += 1
-    brackets = helper.elimate_whitespace_around(source[b_start:index])
+    (index, content) = helper.forward_until(source, index, ']')
+    brackets = helper.elimate_whitespace_around(content)
     index += 1
     jumps = helper.elimate_leading_whitespace(source[index:], '[')
     index += jumps
@@ -122,15 +117,10 @@ def _split_link(source, target, length, start, prev_info):
     link_type = 'inline' if source[index] == '(' else 'refer'
     end = ')' if link_type == 'inline' else ']'
     index += 1
-    next_start = index
-    while index < length and source[index] != end:
-        if source[index] == '\\':
-            index += 2
-            continue
-        index += 1
+    (index, content) = helper.forward_until(source, index, end)
     if index >= length:
         return start
-    content = helper.elimate_whitespace_around(source[next_start:index])
+    content = helper.elimate_whitespace_around(content)
     if link_type == 'inline':
         _check_inline_link(target, content, inner, is_img)
     else:
@@ -168,15 +158,10 @@ def _check_emphasis(source, target, length, start):
         index += 1
         emp_type = 'bold'
     index += 1
-    content_start = index
-    while index < length and source[index] != symbol:
-        if source[index] == '\\':
-            index += 2
-            continue
-        index += 1
+    (index, content) = helper.forward_until(source, index, symbol)
     if index >= length:
         return start
-    content = helper.elimate_whitespace_around(source[content_start:index])
+    content = helper.elimate_whitespace_around(content)
     if emp_type == 'bold' and (index + 1 >= length or source[index + 1] != symbol):
         target.append({'span_type': 'text', 'content': [symbol]})
         emp_type = 'italic'
@@ -204,15 +189,10 @@ def _check_strike_out(source, target, length, start):
     if source[:2] != '~~':
         return start
     index = start + 2
-    content_start = index
-    while index + 1 < length and source[index:index + 2] != '~~':
-        if source[index] == '\\':
-            index += 2
-            continue
-        index += 1
+    (index, content) = helper.forward_until(source, index, '~~')
     if index + 1 >= length:
         return start
-    content = helper.elimate_whitespace_around(source[content_start:index])
+    content = helper.elimate_whitespace_around(content)
     target.append({'span_type': 'strike_out', 'content': parse_span(content, [])})
     return index + 2
 
@@ -227,15 +207,10 @@ def _check_script(source, target, length, start):
     index, content = start, []
     script_type = 'super_script' if source[start] == '^' else 'sub_script'
     index += 1
-    content_start = index
-    while index < length and source[index] != symbol:
-        if source[index] == '\\':
-            index += 2
-            continue
-        index += 1
+    (index, content) = helper.forward_until(source, index, symbol)
     if index >= length:
         return start
-    content = helper.elimate_whitespace_around(source[content_start:index])
+    content = helper.elimate_whitespace_around(content)
     target.append({'span_type': script_type, 'content': parse_span(content, [])})
     return index + 1
 

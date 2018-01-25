@@ -51,3 +51,20 @@ def split_first_whitespace(source):
             return [source[:temp], source[i:]]
         i += 1
     return [source]
+
+
+def forward_until(source, start, symbol):
+    """ forward util a symbol
+    """
+    count = len(symbol)
+    length = len(source) + 1 - count
+    result = []
+    while start < length and source[start:start + count] != symbol:
+        if source[start] == '\\':
+            if start + 1 < length:
+                result.append(source[start + 1])
+            start += 2
+            continue
+        result.append(source[start])
+        start += 1
+    return (start, ''.join(result))

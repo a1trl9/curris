@@ -29,7 +29,15 @@ def process_link(link):
     """ handle link check
     """
     comps = link.split('://', 1)
-    comps[-1] = quote_plus(comps[-1])
+    paq = comps[-1].split('?', 1)
+    pathname, query = '', ''
+    if paq:
+        pathname = '/'.join([quote_plus(c) for c in paq[0].split('/')])
+    if len(paq) > 1:
+        query = quote_plus(paq[1])
+        comps[-1] = pathname + '?' + query
+    else:
+        comps[-1] = pathname + query
     if comps[0] not in ['http', 'https']:
         comps[0] = 'http://' + comps[0]
     return '://'.join(comps)

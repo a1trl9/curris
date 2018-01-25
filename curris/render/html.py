@@ -173,9 +173,9 @@ def _inner_render_span(target, attrs):
         content, title, inner, is_img = process_link(target['content']), target['title'],\
                 target['inner'], target['is_img']
         if is_img:
-            return '<img src="{}" title="{}" />'.format(_render_span(content, attrs),
+            return '<img src="{}" title="{}" />'.format(content,
                                                         _render_span(inner, attrs))
-        return '<a href="{}" title="{}">{}</a>'.format(_render_span(content, attrs),
+        return '<a href="{}" title="{}">{}</a>'.format(content,
                                                        _render_span(title, attrs),
                                                        _render_span(inner, attrs))
     return _render_span(target['content'], attrs)

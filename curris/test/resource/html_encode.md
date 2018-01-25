@@ -16,4 +16,4 @@
 alert('test')
 ```
 
-["test"](www.google.com)
+["test"](www.google.com/test?hello)
